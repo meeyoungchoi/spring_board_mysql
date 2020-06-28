@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 누구를 구현하는 xml파일이다 -->
+<mapper
+	namespace="com.spring.db.mybatis.score.repository.IScoreMapper">
+	<!-- sql문만 작성 -->
+
+	<!-- DB컬럼명과 VO의 필드명을 맞추는 ResultMap 선언 -->
+	<!-- type:VO의 경로 -->
+	<!-- column:데이터베이스 컬럼명 property:멤버변수이름 -->
+	<!-- id:테이블에 primary key만 id로 매핑해준다 -->
+	<!-- sqlsessionfacotr객체가 알아서 객체를 만들어준다 -->
+	<resultMap id="ScoreMap"
+		type="com.spring.db.mybatis.score.model.ScoreVO">
+		<id property="stuNum" column="stu_id" />
+		<result property="stuName" column="stu_name" />
+		<result property="kor" column="kor" />
+		<result property="eng" column="eng" />
+		<result property="math" column="math" />
+		<result property="total" column="total" />
+		<result property="average" column="average" />
+	</resultMap>
+
+	<!-- 점수 등록 기능 id:구현할 추상메소드 이름 -->
+	<!-- IScoreMapper에 선언된 추상메서드를 오버라이딩 -->
+	<!-- ${}: getter()를 부른다 -->
+	<!-- SqlSessionFactory객체가 알아서 다 해준다 -->
+	<insert id="insertScore">
+		INSERT INTO scores
+		(stu_name, kor, eng, math, total,
+		average)
+		VALUES (#{stuName}, #{kor}, #{eng}, #{math}, #{total},
+		#{average})
+	</insert>
+
+	<!-- 점수 목록 조회 -->
+	<!-- resultMap: 이컬럼명이 이멤버변수에 들어간다고 알려줘야 한다 -->
+	<!-- 컬럼값을 가져와서 멤버변수에 넣어준다 -->
+	<!-- 알아서 리턴타입을 판단해서 리턴해준다 -->
+	<select id="selectAllScores" resultMap="ScoreMap">
+		SELECT * FROM scores;
+	</select>
+
+	<!-- 점수 삭제 -->
+	<delete id="deleteScore">
+		DELETE FROM scores WHERE stu_id=#{stuNum}
+	</delete>
+
+	<!-- 점수 개별 조회기능 -->
+	<select id="selectOne" resultMap="ScoreMap">
+		SELECT * FROM scores 
+		WHERE 
+		stu_id=${stuNum}
+	</select>
+
+</mapper>
+
+
